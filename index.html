@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexioSystem — Plataforma para Agências de Marketing</title>
+  <title>Nexio System — Sistema operacional para agências de marketing</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
     rel="stylesheet">
@@ -170,7 +170,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 9rem 2rem 5rem;
+      padding: 9.6rem 2rem 5rem;
       position: relative;
       z-index: 1;
       overflow: hidden;
@@ -238,6 +238,121 @@
     }
 
     /* hero text */
+    .brand-reveal-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: up .8s ease forwards;
+      animation-delay: .05s;
+    }
+
+    .brand-reveal-line {
+      width: 42px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 224, .55), transparent);
+      opacity: .7;
+    }
+
+    .brand-reveal {
+      position: relative;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(.82rem, 1.2vw, 1rem);
+      font-weight: 700;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding: .35rem .15rem;
+      color: transparent;
+      background: linear-gradient(90deg, #7b5cff 0%, #00ffe0 35%, #c8d8e8 50%, #00ffe0 70%, #7b5cff 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 0 0 12px rgba(0, 255, 224, .18), 0 0 30px rgba(123, 92, 255, .12);
+      animation: brandFlow 6s linear infinite;
+    }
+
+    .brand-reveal::before,
+    .brand-reveal::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    .brand-reveal::before {
+      top: 0;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 224, .45), transparent);
+    }
+
+    .brand-reveal::after {
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(123, 92, 255, .35), transparent);
+    }
+
+    .brand-reveal.glitched {
+      animation: brandFlow 6s linear infinite, brandFlicker 1.8s ease-in-out infinite;
+    }
+
+    #brandScramble {
+      display: inline-block;
+      min-width: 14ch;
+    }
+
+    @keyframes brandFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 220% 50%;
+      }
+    }
+
+    @keyframes brandFlicker {
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+
+      8% {
+        filter: brightness(1.08);
+      }
+
+      9% {
+        filter: brightness(.92);
+      }
+
+      10% {
+        filter: brightness(1.12);
+      }
+
+      11% {
+        filter: brightness(1);
+      }
+
+      52% {
+        filter: brightness(1);
+      }
+
+      53% {
+        filter: brightness(1.14);
+      }
+
+      54% {
+        filter: brightness(.96);
+      }
+
+      55% {
+        filter: brightness(1);
+      }
+    }
+
     .hero-tag {
       font-family: 'Space Mono', monospace;
       font-size: .65rem;
@@ -1249,6 +1364,20 @@
 
     @media(max-width:960px) {
 
+      .brand-reveal-wrap {
+        gap: .7rem;
+        margin-bottom: .8rem;
+      }
+
+      .brand-reveal-line {
+        width: 24px;
+      }
+
+      .brand-reveal {
+        letter-spacing: .26em;
+        font-size: .78rem;
+      }
+
       .c1,
       .c2,
       .c3,
@@ -1283,6 +1412,10 @@
 
       nav {
         padding: 1rem 1.5rem;
+      }
+
+      .hero {
+        padding: 8.7rem 1.5rem 4.5rem;
       }
 
       .nav-links {
@@ -1342,6 +1475,13 @@
       <div class="orb orb3">
         <div class="orb-dot"></div>
       </div>
+    </div>
+    <div class="brand-reveal-wrap">
+      <div class="brand-reveal-line"></div>
+      <div class="brand-reveal" aria-label="Nexio System">
+        <span id="brandScramble">NEXIO SYSTEM</span>
+      </div>
+      <div class="brand-reveal-line"></div>
     </div>
     <div class="hero-tag">
       <div class="tag-line"></div>SISTEMA OPERACIONAL DE AGÊNCIAS<div class="tag-line"></div>
@@ -1813,6 +1953,47 @@
       idx++;
     }
     cycle(); setInterval(cycle, 2800);
+  </script>
+  <script>
+    (function () {
+      const el = document.getElementById('brandScramble');
+      const brand = document.querySelector('.brand-reveal');
+      if (!el || !brand) return;
+
+      const finalText = 'NEXIO SYSTEM';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let frame = 0;
+      const totalFrames = 38;
+
+      brand.classList.add('glitched');
+
+      const interval = setInterval(() => {
+        let output = '';
+
+        for (let i = 0; i < finalText.length; i++) {
+          const target = finalText[i];
+
+          if (target === ' ') {
+            output += ' ';
+            continue;
+          }
+
+          if (i < frame / 2.1) {
+            output += finalText[i];
+          } else {
+            output += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+
+        el.textContent = output;
+        frame++;
+
+        if (frame > totalFrames) {
+          clearInterval(interval);
+          el.textContent = finalText;
+        }
+      }, 45);
+    })();
   </script>
 </body>
 
